@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary-Clock</title>
+</head>
+<body>
+    <div class="clock">
+        <div class="col">
+            <div class="cell active"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+        <div class="col">
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+        <div class="col">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+        <div class="col">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+    </div>
+</body>
+<script>
+
+
+</script>
+<style>
+    :root{
+        --background:rgb(255, 255, 255);
+        --active:rgb(255, 192, 192);
+        --border:rgb(54, 54, 54);
+        --text:black;
+        --special-text:red;
+    }
+    .clock{
+        width: 50vw;
+        height: 50vw;
+        border: var(--border) 2px solid;
+        display: flex;
+        flex-direction: row;
+        background-color: var(--background);
+        border-radius: 1%;
+    }
+    .col{
+        flex:1;
+        display: flex;
+        /* border: black 2px solid; */
+        flex-direction: column; 
+        justify-content: space-around;
+        padding: 2%;
+    }
+    .cell{
+        /* flex:1 1; */
+        border: var(--border) 2px solid;
+        aspect-ratio: 1 / 1 ;
+        border-radius: 5%;
+        background-color: var(--background);
+    }
+    .cell.active {
+        background-color: var(--active);
+    }
+</style>
+</html>
