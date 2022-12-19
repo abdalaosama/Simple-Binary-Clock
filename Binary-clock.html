@@ -7,33 +7,105 @@
     <title>Binary-Clock</title>
 </head>
 <body>
-    <div class="clock">
-        <div class="col">
-            <div class="cell active"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
+    <div class="parent">
+        <div class="div1 label"> Binary-Clock </div>
+        <div class="clock">
+            <div class="col">
+                <div class="cell active"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+            </div>
+            <div class="col dots">
+                <div class="cell"></div>
+                <div class="cell"></div>
+            </div>
+            <div class="col">
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+            </div>
+            <div class="col">
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+            </div>
         </div>
-        <div class="col">
-            <div class="cell"></div>
-            <div class="cell"></div>
-        </div>
-        <div class="col">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-        </div>
-        <div class="col">
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-            <div class="cell"></div>
-        </div>
+        <div class="div3 label">8</div>
+        <div class="div4 label">4</div>
+        <div class="div5 label">2</div>
+        <div class="div6 label">1</div>
+        <div class="div7 label">HH</div>
+        <div class="div8 label">am</div>
+        <div class="div9 label">MM</div>
     </div>
+
 </body>
 <script>
+UpdateClock();
+setInterval(UpdateClock, 1000 * 1);
 
+function UpdateClock(time){
+    //updates the clock to the local time if time paraeter is not specified
+    try {
+        const Time =  ((typeof time == "undefined" || !time)?(new Date()):time);
+        const DisolvedTime = FormateTime(Time);
+        const BCDarrays = [];
+        const splitMinuits = DisolvedTime.minutes.toString().split("").map(s => parseInt(s));
+        
+        BCDarrays.push(NumToBinary(DisolvedTime.hours, 4));
+        BCDarrays.push([DisolvedTime.am, DisolvedTime.am]);
+        BCDarrays.push(NumToBinary(splitMinuits[0], 3));
+        BCDarrays.push(NumToBinary(splitMinuits[1], 4));
 
+        ClearClock();
+        DrawClock(BCDarrays);
+        return;
+    } catch (e){
+        console.log(e);
+        ClearClock();
+    }
+}
+
+function DrawClock(BCD_arrays){
+    BCD_arrays.forEach( (x,col) => {
+        x.forEach((state, row) =>{
+            const element = document.querySelector(`.clock > .col:nth-child(${col+1}) > .cell:nth-child(${row+1})`);
+            if(state) element.classList.add("active");
+        })
+    })
+}
+
+function ClearClock(){
+    //clears the clock for redrawing
+    const elements = document.querySelectorAll(".cell");
+    elements.forEach(e => e.classList.remove("active"));
+}
+
+//https://stackoverflow.com/questions/8888491/how-do-you-display-javascript-datetime-in-12-hour-am-pm-format
+function FormateTime(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var am = hours >= 12 ? false : true;
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + (am?"am":"pm");
+  return ({"time":strTime,am,hours,minutes});
+}
+
+function NumToBinary(num, length = 4){
+    if (isNaN(num) || num < 0){console.log("to binary conv. failed");return "0";}
+    //https://www.programiz.com/javascript/examples/decimal-binary#:~:text=Example%202%3A%20Convert%20Decimal%20to%20Binary%20Using%20toString()&text=The%20parseInt()%20method%20is,decimal%20number%20to%20binary%20number.
+    const _Binary = num.toString(2);
+    let Binary = _Binary.split('').reverse().map(n => n==true);
+    while(Binary.length < length){
+        Binary.push(false);
+    }
+
+    return Binary;
+}
 </script>
 <style>
     :root{
@@ -43,21 +115,59 @@
         --text:black;
         --special-text:red;
     }
-    .clock{
+    .parent {
+        display: grid;
+        grid-template-columns: 0.35fr repeat(2, 1fr) 2fr;
+        grid-template-rows: 0.35fr repeat(4, 1fr) 0.35fr;
+        grid-column-gap: 0px;
+        grid-row-gap: 0px;
         width: 50vw;
-        height: 50vw;
+        /* height: 50vw; */
         border: var(--border) 2px solid;
+        justify-content: center;
+        align-content: center;
+    }
+
+    .div1 { grid-area: 1 / 1 / 2 / 5; }
+    .clock { grid-area: 2 / 2 / 6 / 5; }
+    .div3 { grid-area: 2 / 1 / 3 / 2; }
+    .div4 { grid-area: 3 / 1 / 4 / 2; }
+    .div5 { grid-area: 4 / 1 / 5 / 2; }
+    .div6 { grid-area: 5 / 1 / 6 / 2; }
+    .div7 { grid-area: 6 / 2 / 7 / 3; }
+    .div8 { grid-area: 6 / 3 / 7 / 4; }
+    .div9 { grid-area: 6 / 4 / 7 / 5; }
+
+    .label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .clock{
         display: flex;
         flex-direction: row;
         background-color: var(--background);
         border-radius: 1%;
+
+        aspect-ratio: 1 / 1 ;
+    }
+
+    .dots{
+        justify-content: center !important;
+        align-items: center;
+        gap: 10% !important;
+    }
+    .dots > .cell{
+        border-radius: 50% !important;
+        width: 50%;
     }
     .col{
         flex:1;
         display: flex;
         /* border: black 2px solid; */
-        flex-direction: column; 
-        justify-content: space-around;
+        flex-direction: column-reverse; 
+        justify-content: flex-start;
+        gap:4%;
         padding: 2%;
     }
     .cell{
