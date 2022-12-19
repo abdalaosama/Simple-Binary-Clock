@@ -115,6 +115,10 @@ function NumToBinary(num, length = 4){
         --text:black;
         --special-text:red;
     }
+    body {
+        display: flex;
+        justify-content: center;
+    }
     .parent {
         display: grid;
         grid-template-columns: 0.35fr repeat(2, 1fr) 2fr;
@@ -142,6 +146,9 @@ function NumToBinary(num, length = 4){
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: max(10px, 4vw) ;
+        font-weight: bold;
+        font-family: 'Courier New', Courier, monospace;
     }
     .clock{
         display: flex;
